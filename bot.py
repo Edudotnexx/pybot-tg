@@ -1,3 +1,4 @@
+import os
 import random
 import sqlite3
 from telegram import Update
@@ -138,7 +139,11 @@ def unblock_user(update: Update, context: CallbackContext) -> None:
         update.message.reply_text("❌ شما اجازه دسترسی ندارید.")
 
 def main() -> None:
-    updater = Updater("595966727:AAElzWidMnjFEQ4j6Ovvj31JusLalzsRBnA")
+    token = os.getenv("595966727:AAElzWidMnjFEQ4j6Ovvj31JusLalzsRBnA")
+    if not token:
+        raise ValueError("TELEGRAM_API_TOKEN is not set in environment variables")
+
+    updater = Updater(token)
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
@@ -153,6 +158,8 @@ def main() -> None:
 
     updater.start_polling()
     updater.idle()
+
+    conn.close()
 
 if __name__ == '__main__':
     main()
